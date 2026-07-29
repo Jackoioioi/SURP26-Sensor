@@ -1,3 +1,4 @@
+# run with python3 accel_read.py
 import spidev
 import RPi.GPIO as GPIO
 import time
