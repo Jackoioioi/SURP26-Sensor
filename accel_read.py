@@ -1,4 +1,3 @@
-# run with python3 accel_read.py
 import spidev
 import RPi.GPIO as GPIO
 import time
@@ -69,7 +68,7 @@ def sensor_rotation(phi_deg):
         [ 0,             0,          1]
     ])
 
-# a rotation matrix per sensor
+# one rotation matrix 4x, so one per sensor
 SENSOR_PHI = {1: 90, 2: 0, 3: 270, 4: 180}
 R = {i: sensor_rotation(phi) for i, phi in SENSOR_PHI.items()}
 
@@ -81,7 +80,8 @@ try:
 	while True:
 		for i, pin in enumerate(CS_PINS):
 			x, y, z = read_accel(pin)
-			print(f"Sensor {i+1}: x = {x:+.3f}g y={y:+.3f}g z={z:+.3f}g", end=" ")
+			gx, gy, gz = to_global(i + 1, (x, y, z))
+			print(f"Sensor {i+1}: local x={x:+.3f} y={y:+.3f} z={z:+.3f}  |  global X={gx:+.3f} Y={gy:+.3f} Z={gz:+.3f}", end="  ")
 		print()
 		time.sleep(0.02)  # 50Hz loop, 1/50Hz = 0.02s
 except KeyboardInterrupt:
